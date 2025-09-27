@@ -1,20 +1,28 @@
 package main
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+	"time"
+)
 
-func SayHello(name string, wg *sync.WaitGroup) {
+func sayHello(name string, wg *sync.WaitGroup) {
 	defer wg.Done()
-	println("Hello, " + name)
+	for i := 1; i <= 3; i++ {
+		fmt.Println("Hello", name, "ke", i)
+		time.Sleep(500 * time.Millisecond)
+	}
 }
 
 func main() {
 	var wg sync.WaitGroup
-	names := []string{"Alice", "Bob", "Charlie"}
 
-	for _, name := range names {
-		wg.Add(1)
-		go SayHello(name, &wg)
-	}
+	wg.Add(3)
+
+	go sayHello("Goroutine 1", &wg)
+	go sayHello("Goroutine 2", &wg)
+	go sayHello("Goroutine 3", &wg)
 	wg.Wait()
-	print("All greetings sent.\n")
+
+	fmt.Println("Main function finished")
 }
