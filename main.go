@@ -17,8 +17,10 @@ func sayHello(name string, wg *sync.WaitGroup) {
 func main() {
 	var wg sync.WaitGroup
 
+	// Menambahkan jumlah goroutine yang akan dijalankan
 	wg.Add(3)
 
+	// Menjalankan goroutine
 	go sayHello("Goroutine 1", &wg)
 	go sayHello("Goroutine 2", &wg)
 	go sayHello("Goroutine 3", &wg)
