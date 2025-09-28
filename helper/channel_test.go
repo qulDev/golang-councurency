@@ -31,3 +31,50 @@ func TestChannelAsParameter(t *testing.T) {
 
 	time.Sleep(3 * time.Second)
 }
+
+func OnlyIn(ch chan<- string) {
+	time.Sleep(2 * time.Second)
+	ch <- "Rizqullah"
+
+}
+
+func OnlyOut(ch <-chan string) {
+	time.Sleep(2 * time.Second)
+	data := <-ch
+	fmt.Println(data)
+}
+
+func TestOnlyInOnlyOut(t *testing.T) {
+	channel := make(chan string, 1)
+	defer close(channel)
+
+	go OnlyIn(channel)
+	go OnlyOut(channel)
+
+	fmt.Println("Menunggu...")
+	time.Sleep(3 * time.Second)
+
+}
+func TestBufferedChannel(t *testing.T) {
+	channel := make(chan string, 3)
+	defer close(channel)
+
+	channel <- "Rizqullah"
+
+	fmt.Println("selesai")
+}
+func TestRangeChannel(t *testing.T) {
+	channel := make(chan string, 9)
+
+	go func() {
+		for i := 0; i < 10; i++ {
+			channel <- fmt.Sprintf("Rizqullah %d", i)
+		}
+		close(channel)
+	}()
+
+	for data := range channel {
+		fmt.Println("Menerima data", data)
+	}
+	fmt.Println("Selesai")
+}
